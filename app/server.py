@@ -10,7 +10,7 @@ from fastai.vision import *
 
 model_file_url = 'https://storage.googleapis.com/smash-bros-detector/resnet-50-stage-2.pkl'
 model_file_name = 'resnet-50-stage-2.pkl'
-with open('models/class_names.txt') as f:
+with open('app/models/class_names.txt') as f:
     classes=f.readlines()
 path = Path(__file__).parent
 
