@@ -26,11 +26,8 @@ async def download_file(url, dest):
             with open(dest, 'wb') as f: f.write(data)
 
 async def setup_learner():
-    await download_file(model_file_url, path/'models'/f'{model_file_name}.pth')
-    data_bunch = ImageDataBunch.single_from_classes(path, classes,
-        ds_tfms=get_transforms(), size=299).normalize(imagenet_stats)
-    learn = cnn_learner(data_bunch, models.resnet50, pretrained=False)
-    learn.load(model_file_name)
+    await download_file(model_file_url, path/'models'/model_file_name)
+    learn = load_learner(model_file_name)
     return learn
 
 loop = asyncio.get_event_loop()
@@ -48,7 +45,9 @@ async def analyze(request):
     data = await request.form()
     img_bytes = await (data['file'].read())
     img = open_image(BytesIO(img_bytes))
-    return JSONResponse({'result': str(learn.predict(img)[0])})
+    pred_class,pred_idx,outputs = learn.predict(img)
+    prob = str(outputs[pred_idx])[7:-1]
+    return JSONResponse({'result': pred_class, 'probability': prob })
 
 if __name__ == '__main__':
     if 'serve' in sys.argv: uvicorn.run(app, host='0.0.0.0', port=8080)
