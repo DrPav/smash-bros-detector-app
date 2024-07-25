@@ -1,6 +1,6 @@
 numpy
 -f https://download.pytorch.org/whl/torch_stable.html
-torch==1.4.0+cpu
+torch==2.2.0
 torchvision==0.5.0+cpu
 fastai==1.0.60
 starlette
